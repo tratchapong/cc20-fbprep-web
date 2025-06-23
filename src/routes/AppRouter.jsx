@@ -1,7 +1,12 @@
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
+import Login from '../pages/Login'
+import Home from '../pages/Home'
+import Friends from '../pages/Friends'
+import Profile from '../pages/Profile'
+import { useState } from 'react'
 
 const guestRouter = createBrowserRouter([
-  { path: '/', element: <p>Login</p> },
+  { path: '/', Component: Login },
   { path: '*', element: <Navigate to='/' /> },
 ])
 
@@ -12,17 +17,23 @@ const userRouter = createBrowserRouter([
       <Outlet />
     </>,
     children: [
-      { path: '', element: <p>User Home : sidebar, posts</p> },
-      { path: 'friends', element: <p>Friends Home</p> },
-      { path: 'profile', element: <p>Profile Home</p> },
+      { path: '', Component: Home },
+      { path: 'friends', Component: Friends },
+      { path: 'profile', Component: Profile },
       { path: '*', element: <Navigate to='/' /> },
     ]
   }
 ])
 
 function AppRouter() {
+  const [user, setUser] = useState(false)
+  // const user = 'andy@ggg.mail'
+  const finalRouter = user ? userRouter : guestRouter
   return (
-    <RouterProvider router={userRouter} />
+    <>
+      <button className='btn' onClick={() => setUser(!user)}>{user ? 'Logout' : 'Login'}</button>
+      <RouterProvider router={finalRouter} />
+    </>
   )
 }
 
