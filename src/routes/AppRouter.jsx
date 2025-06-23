@@ -3,7 +3,6 @@ import Login from '../pages/Login'
 import Home from '../pages/Home'
 import Friends from '../pages/Friends'
 import Profile from '../pages/Profile'
-import { useState } from 'react'
 
 const guestRouter = createBrowserRouter([
   { path: '/', Component: Login },
@@ -26,12 +25,11 @@ const userRouter = createBrowserRouter([
 ])
 
 function AppRouter() {
-  const [user, setUser] = useState(false)
-  // const user = 'andy@ggg.mail'
+  // const user = null
+  const user = 'andy@ggg.mail'
   const finalRouter = user ? userRouter : guestRouter
   return (
     <>
-      <button className='btn' onClick={() => setUser(!user)}>{user ? 'Logout' : 'Login'}</button>
       <RouterProvider router={finalRouter} />
     </>
   )
