@@ -1,10 +1,10 @@
+import AppRouter from "./routes/AppRouter"
 
 function App() {
 
-
   return (
     <>
-      <h1 className="text-4xl">Fakebook CC20</h1>
+      <AppRouter />
     </>
   )
 }
