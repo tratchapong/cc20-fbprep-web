@@ -1,5 +1,6 @@
 import React from 'react'
 import { FacebookTitle } from '../icons'
+import Register from './Register'
 
 function Login() {
   return (
@@ -47,14 +48,7 @@ function Login() {
       </div>
       <dialog id="register-form" className="modal">
         <div className="modal-box">
-          <form onSubmit={e=>e.preventDefault()}>
-            <p className='text-3xl'>Register Form</p>
-            <input
-              type="text"
-              className='input input-bordered w-full'
-              placeholder='E-mail or Phone number' />
-            <button className='btn btn-primary text-xl'>Register</button>
-          </form>
+          <Register />
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
