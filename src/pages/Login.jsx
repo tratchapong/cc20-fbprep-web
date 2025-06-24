@@ -1,15 +1,16 @@
 import React from 'react'
+import { FacebookTitle } from '../icons'
 
 function Login() {
   return (
     <div className="h-[700px] pt-20 pb-28 bg-[#f2f4f7]">
-      <div className="p-5 mx-auto max-w-screen-lg min-h-[540px] flex justify-between  ">
-        <div className="flex flex-col gap-4 mt-20 basis-3/5">
+      <div className="p-5 mx-auto max-w-screen-lg min-h-[540px] flex justify-between max-md:flex-col   ">
+        <div className="flex flex-col max-md:items-center max-md:text-center gap-4 mt-20 basis-3/5">
           <div className="text-4xl">
-            Facebook
+            <FacebookTitle />
           </div>
-          <h2 className='text-[30px] leading-8 mt-3 w-[514px] '>
-            Fakebook helps you connect and share with the people.
+          <h2 className='text-[30px] max-md:text-[28px] leading-8 mt-3 w-[514px] '>
+            Fakebook helps you connect and share with the people in your life.
           </h2>
           <p className="text-sm text-red-500">
             *** This is not real Facebook site ***
