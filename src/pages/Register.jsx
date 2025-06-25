@@ -1,15 +1,19 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../utils/validators";
+import { useEffect } from "react";
 
 
-function Register() {
+function Register({resetForm}) {
   const { handleSubmit, register, formState, reset } = useForm({
     resolver: yupResolver(registerSchema),
     mode: 'onBlur'
   });
-  console.log(register('testname'))
   const { isSubmitting, errors } = formState;
+
+  useEffect(()=>{
+    reset()
+  },[resetForm])
 
   const onSubmit = data => {
     alert(JSON.stringify(data, null, 2))
