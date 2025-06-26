@@ -2,23 +2,30 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../utils/validators";
 import { useEffect } from "react";
+import axios from "axios";
 
 
-function Register({resetForm}) {
+function Register({ resetForm }) {
   const { handleSubmit, register, formState, reset } = useForm({
     resolver: yupResolver(registerSchema),
     mode: 'onBlur'
   });
   const { isSubmitting, errors } = formState;
 
-  useEffect(()=>{
+  useEffect(() => {
     reset()
-  },[resetForm])
+  }, [resetForm])
 
-  const onSubmit = data => {
-    alert(JSON.stringify(data, null, 2))
-    document.getElementById('register-form').close()
-    reset()
+  const onSubmit = async data => {
+    try {
+      // alert(JSON.stringify(data, null, 2))
+      const resp = await axios.post('http://localhost:8899/api/auth/register', data)
+      console.log(resp)
+      document.getElementById('register-form').close()
+      // reset()
+    } catch (err) {
+      console.log(err)
+    }
   }
   return (
     <>
@@ -45,22 +52,22 @@ function Register({resetForm}) {
         </div>
         <input type="text"
           placeholder='Email or Phone number'
-          className='input input-bordered w-full' 
+          className='input input-bordered w-full'
           {...register('identity')}
         />
-          {errors.identity && <p className="text-sm text-error -mt-4">{errors.identity?.message}</p>}
+        {errors.identity && <p className="text-sm text-error -mt-4">{errors.identity?.message}</p>}
         <input type="password"
           placeholder='New password'
-          className='input input-bordered w-full' 
+          className='input input-bordered w-full'
           {...register('password')}
-          />
-          {errors.password && <p className="text-sm text-error -mt-4">{errors.password?.message}</p>}
+        />
+        {errors.password && <p className="text-sm text-error -mt-4">{errors.password?.message}</p>}
         <input type="password"
           placeholder='Confirm password'
-          className='input input-bordered w-full' 
+          className='input input-bordered w-full'
           {...register('confirmPassword')}
-          />
-          {errors.confirmPassword && <p className="text-sm text-error -mt-4">{errors.confirmPassword?.message}</p>}
+        />
+        {errors.confirmPassword && <p className="text-sm text-error -mt-4">{errors.confirmPassword?.message}</p>}
         <button className='btn btn-secondary text-xl text-white'>Sign up</button>
       </form>
     </>

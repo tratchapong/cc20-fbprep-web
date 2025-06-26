@@ -1,11 +1,26 @@
 import React, { useState } from 'react'
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from '../utils/validators';
 import { FacebookTitle } from '../icons'
 import Register from './Register'
 
 function Login() {
   const [resetForm, setResetForm ] = useState(false)
+  const { handleSubmit, register, formState, reset} = useForm({
+    resolver : yupResolver(loginSchema),
+    mode: 'onBlur'
+  })
+
+  const { isSubmitting, errors } = formState;
+
   const hdlClose = e => {
     setResetForm(prv=>!prv)
+  }
+
+  const onSubmit = data => {
+    alert(JSON.stringify(data, null, 2))
+    reset()
   }
   return (
     <>
@@ -24,24 +39,32 @@ function Login() {
           </div>
           <div className="flex flex-1">
             <div className="card bg-base-100 w-full h-[350px] shadow-xl mt-8">
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="card-body gap-3 p-4">
                   <input
                     type="text"
                     className='input input-bordered w-full'
-                    placeholder='E-mail or Phone number' />
+                    placeholder='E-mail or Phone number' 
+                    {...register('identity')}
+                  />
+                  { errors.identity?.message && 
+                    <p className='text-sm text-error -mt-3'>{errors.identity.message}</p>}
                   <input
                     type="password"
                     className='input input-bordered w-full'
-                    placeholder='password' />
+                    placeholder='password' 
+                    {...register('password')}
+                    />
+                    { errors.password?.message &&
+                    <p className='text-sm text-error -mt-3'>{errors.password.message}</p>}
                   <button className='btn btn-primary text-xl'>Login</button>
                   <p className="text-center cursor-pointer opacity-70">
                     Forgotten password?
                   </p>
                   <div className="divider my-0"></div>
                   <button
-                    className='btn btn-secondary text-lg text-white mx-auto'
                     type='button'
+                    className='btn btn-secondary text-lg text-white mx-auto'
                     onClick={() => document.getElementById('register-form').showModal()}
                   >Create new account</button>
                 </div>
