@@ -1,26 +1,35 @@
 import React, { useState } from 'react'
+import axios from 'axios';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from '../utils/validators';
+import { toast } from 'react-toastify';
 import { FacebookTitle } from '../icons'
 import Register from './Register'
 
 function Login() {
-  const [resetForm, setResetForm ] = useState(false)
-  const { handleSubmit, register, formState, reset} = useForm({
-    resolver : yupResolver(loginSchema),
+  const [resetForm, setResetForm] = useState(false)
+  const { handleSubmit, register, formState, reset } = useForm({
+    resolver: yupResolver(loginSchema),
     mode: 'onBlur'
   })
 
   const { isSubmitting, errors } = formState;
 
   const hdlClose = e => {
-    setResetForm(prv=>!prv)
+    setResetForm(prv => !prv)
   }
 
-  const onSubmit = data => {
-    alert(JSON.stringify(data, null, 2))
-    reset()
+  const onSubmit = async data => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const resp = await axios.post('http://localhost:8899/api/auth/login', data)
+      toast.success(resp.data.msg,)
+      toast.success(`Welcome, ${resp.data.user.firstName}`)
+    } catch (err) {
+      const errMsg = err.response?.data?.error || err.message
+      toast.error(errMsg)
+    }
   }
   return (
     <>
@@ -39,35 +48,40 @@ function Login() {
           </div>
           <div className="flex flex-1">
             <div className="card bg-base-100 w-full h-[350px] shadow-xl mt-8">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="card-body gap-3 p-4">
-                  <input
-                    type="text"
-                    className='input input-bordered w-full'
-                    placeholder='E-mail or Phone number' 
-                    {...register('identity')}
-                  />
-                  { errors.identity?.message && 
-                    <p className='text-sm text-error -mt-3'>{errors.identity.message}</p>}
-                  <input
-                    type="password"
-                    className='input input-bordered w-full'
-                    placeholder='password' 
-                    {...register('password')}
+              <form onSubmit={handleSubmit(onSubmit)} >
+                <fieldset disabled={isSubmitting}>
+                  <div className="card-body gap-3 p-4">
+                    <input
+                      type="text"
+                      className='input input-bordered w-full'
+                      placeholder='E-mail or Phone number'
+                      {...register('identity')}
                     />
-                    { errors.password?.message &&
-                    <p className='text-sm text-error -mt-3'>{errors.password.message}</p>}
-                  <button className='btn btn-primary text-xl'>Login</button>
-                  <p className="text-center cursor-pointer opacity-70">
-                    Forgotten password?
-                  </p>
-                  <div className="divider my-0"></div>
-                  <button
-                    type='button'
-                    className='btn btn-secondary text-lg text-white mx-auto'
-                    onClick={() => document.getElementById('register-form').showModal()}
-                  >Create new account</button>
-                </div>
+                    {errors.identity?.message &&
+                      <p className='text-sm text-error -mt-3'>{errors.identity.message}</p>}
+                    <input
+                      type="password"
+                      className='input input-bordered w-full'
+                      placeholder='password'
+                      {...register('password')}
+                    />
+                    {errors.password?.message &&
+                      <p className='text-sm text-error -mt-3'>{errors.password.message}</p>}
+                    {!isSubmitting && <button className='btn btn-primary text-xl'>Login</button>}
+                    {isSubmitting && <button className='btn text-xl' >
+                      Logining <span className="loading loading-dots loading-md"></span>
+                    </button>}
+                    <p className="text-center cursor-pointer opacity-70">
+                      Forgotten password?
+                    </p>
+                    <div className="divider my-0"></div>
+                    <button
+                      type='button'
+                      className='btn btn-secondary text-lg text-white mx-auto'
+                      onClick={() => document.getElementById('register-form').showModal()}
+                    >Create new account</button>
+                  </div>
+                </fieldset>
               </form>
             </div>
           </div>
@@ -75,7 +89,7 @@ function Login() {
       </div>
       <dialog id="register-form" className="modal" onClose={hdlClose}>
         <div className="modal-box">
-          <Register resetForm={resetForm}/>
+          <Register resetForm={resetForm} />
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
