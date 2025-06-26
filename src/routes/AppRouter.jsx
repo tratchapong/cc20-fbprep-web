@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router'
 import { Suspense, lazy } from 'react'
+import useUserStore from '../stores/userStore'
 // import Login from '../pages/Login'
 // import Home from '../pages/Home'
 // import Friends from '../pages/Friends'
@@ -30,12 +31,11 @@ const userRouter = createBrowserRouter([
 ])
 
 function AppRouter() {
-  const user = null
-  // const user = 'andy@ggg.mail'
+  const user = useUserStore(state=>state.user)
   const finalRouter = user ? userRouter : guestRouter
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <RouterProvider router={finalRouter} />
+      <RouterProvider key={user?.id} router={finalRouter} />
     </Suspense>
   )
 }

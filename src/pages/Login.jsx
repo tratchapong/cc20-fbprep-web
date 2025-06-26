@@ -6,8 +6,10 @@ import { loginSchema } from '../utils/validators';
 import { toast } from 'react-toastify';
 import { FacebookTitle } from '../icons'
 import Register from './Register'
+import useUserStore from '../stores/userStore';
 
 function Login() {
+  const login = useUserStore( state => state.login)
   const [resetForm, setResetForm] = useState(false)
   const { handleSubmit, register, formState, reset } = useForm({
     resolver: yupResolver(loginSchema),
@@ -23,9 +25,10 @@ function Login() {
   const onSubmit = async data => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
-      const resp = await axios.post('http://localhost:8899/api/auth/login', data)
-      toast.success(resp.data.msg,)
-      toast.success(`Welcome, ${resp.data.user.firstName}`)
+      // const resp = await axios.post('http://localhost:8899/api/auth/login', data)
+      const resp = await login(data)
+      // toast.success(resp.data.msg,)
+      // toast.success(`Welcome, ${resp.data.user.firstName}`)
     } catch (err) {
       const errMsg = err.response?.data?.error || err.message
       toast.error(errMsg)
